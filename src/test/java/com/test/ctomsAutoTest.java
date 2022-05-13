@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,53 +66,46 @@ class ctomsAutoTest {
 	      int rs = cont.getResponseCode();
 	      System.out.println("Http response code: " + rs);	
 	      Thread.sleep(3000);
-    }
-    
-   
-  
+    }    
     @Nested
     @Order(2)
-    @DisplayName("Check Home Page Info")
-    class ahomePageInfo {
- 
-    	@Test 	
-        void getMeta() {
-            
-        	 String content = driver.findElement(By.xpath("//meta[@name='description']"))
-    		      .getAttribute("content");
-    		      System.out.println("Meta Description Content: " + content);	      
-        }
-    	@Test  
+    @DisplayName("Check home page info")
+   class ahomePageInfo {
+	@Test 	
+    void getMeta() {
+        
+    	 String content = driver.findElement(By.xpath("//meta[@name='description']"))
+		      .getAttribute("content");
+		      System.out.println("Meta Description Content: " + content);	      
+    }
+	@Test  
+	
+     void CheckImage() throws Exception {
     	
-         void CheckImage() throws Exception {
-        	
-        	WebElement ImageFile = driver.findElement(By.xpath("//img[@src='//cdn.shopify.com/s/files/1/0111/5966/6788/files/FireflySlideshowV2_1800x1000_crop_center.png?v=1647456343']"));
-                
-                Boolean ImagePresent = (Boolean) ((JavascriptExecutor)driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", ImageFile);
-                if (!ImagePresent)
-                {
-                     System.out.println("Image not displayed.");
-                }
-                else
-                {
-                    System.out.println("Image displayed.");
-                }
-        	} 
-    	}
+    	WebElement ImageFile = driver.findElement(By.xpath("//img[@src='//cdn.shopify.com/s/files/1/0111/5966/6788/files/FireflySlideshowV2_1800x1000_crop_center.png?v=1647456343']"));
+            
+            Boolean ImagePresent = (Boolean) ((JavascriptExecutor)driver).executeScript("return arguments[0].complete && typeof arguments[0].naturalWidth != \"undefined\" && arguments[0].naturalWidth > 0", ImageFile);
+            if (!ImagePresent)
+            {
+                 System.out.println("Image not displayed.");
+            }
+            else
+            {
+                System.out.println("Image displayed.");
+            }
+    	} 
+	}
     
-
-
-	    @Nested
-	    @Order(4)
-	    @DisplayName("Check product page info")
-	    class cproductInfo {	
+    @Nested
+    @Order(3)
+    @DisplayName("Check product page info")
+	 class cproductInfo {	
 	    	 @Test
 	       	 void ShopNow() throws InterruptedException  {      
 	    	        WebElement button = driver.findElement(By.xpath("//a[@href='https://ctomsinc.com/collections/high-angle-aviation-equipment/high-angle-aviation-equipment-kits_firefly-kits']"));
 	    	        assertTrue(button.isDisplayed());
 	    	        button.click();
-	    	        Thread.sleep(3000);
-	    	 
+	    	        Thread.sleep(3000);    	 
 	    }
 	      @Test
 	      @DisplayName("Click Product by Product Title")
@@ -135,8 +129,44 @@ class ctomsAutoTest {
 	          //driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
 	      	}  
 	}
-
-    
-    
-
+    @Nested
+    @Order(4)
+    @DisplayName("check button exist")
+    class checkProductPageButton 
+    {
+    @Test
+	   void login () throws InterruptedException
+	   {
+		  driver.navigate().to("https://www.ctomsinc.com/");
+		  Thread.sleep(3000);
+		  WebElement loginButton = driver.findElement(By.linkText("LOGIN"));
+		  loginButton.click();
+		  Thread.sleep(5000);
+		  WebElement username = driver.findElement(By.id("customer_email"));
+		  username.sendKeys("nawang1019@gmail.com");
+		  WebElement psw = driver.findElement(By.id("customer_password"));
+		  psw.sendKeys("Nwang195320");
+		  WebElement signInButton = driver.findElement(By.xpath("//button[contains(text(),'Sign in')]"));
+		  signInButton.click();
+		   
+	   }
+    }
+	   @Test
+		void checkButton ()
+		{
+			boolean button;
+	      try
+	      {
+	    	  driver.findElement(By.className("product-form--atc-button"));
+	    	  driver.findElement(By.className("shopify-payment-button")); 
+	    	  button = true;
+		      System.out.println("button exists.");
+		      driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(3));
+	      }
+	      catch  (NoSuchElementException e)
+	      {
+	    	  button = false;	  
+		      System.out.println("button doesnt exists.");
+	      }	        
+		}     
 }
