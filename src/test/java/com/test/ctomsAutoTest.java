@@ -165,10 +165,10 @@ class ctomsAutoTest {
             Thread.sleep(5000);
 
             WebElement username = driver.findElement(By.id("customer_email"));
-            username.sendKeys("nawang1019@gmail.com");
+            username.sendKeys("");
 
             WebElement psw = driver.findElement(By.id("customer_password"));
-            psw.sendKeys("Nwang195320");
+            psw.sendKeys("");
 
             WebElement signInButton = driver.findElement(By.xpath(
                         "//button[contains(text(),'Sign in')]"));
